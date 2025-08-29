@@ -3,7 +3,6 @@
   apt:
     name: [curl, gnupg, ca-certificates, software-properties-common]
     state: present
-    update_cache: true
 
 # --- HashiCorp repo setup (official docs)
 - name: Ensure apt keyrings dir exists
