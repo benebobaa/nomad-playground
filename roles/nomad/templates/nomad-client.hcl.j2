@@ -1,0 +1,37 @@
+datacenter = "{{ nomad_datacenter }}"
+region     = "{{ nomad_region }}"
+name       = "{{ inventory_hostname }}"
+data_dir   = "/var/lib/nomad"
+bind_addr  = "0.0.0.0"
+
+advertise {
+  http = "{{ ansible_default_ipv4.address }}"
+  rpc  = "{{ ansible_default_ipv4.address }}"
+  serf = "{{ ansible_default_ipv4.address }}"
+}
+
+client {
+  enabled = true
+
+  # allow docker & exec drivers
+  options = {
+    "driver.allowlist" = "docker,exec"
+  }
+}
+
+plugin "docker" {
+  config {
+    allow_privileged = true
+  }
+}
+
+{% if not nomad_enable_tls %}
+tls { http = false; rpc = false; serf = false }
+{% endif %}
+
+acl { enabled = {{ 'true' if nomad_enable_acls else 'false' }} }
+
+telemetry {
+  publish_allocation_metrics = true
+  publish_node_metrics       = true
+}

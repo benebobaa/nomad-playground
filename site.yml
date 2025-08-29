@@ -1,0 +1,8 @@
+- name: Prepare Nomad playground
+  hosts: all
+  become: true
+  vars:
+    hashicorp_gpg: https://apt.releases.hashicorp.com/gpg
+    hashicorp_repo: "deb [arch={{ (ansible_architecture == 'aarch64') | ternary('arm64','amd64') }} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+  roles:
+    - nomad

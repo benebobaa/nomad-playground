@@ -1,0 +1,15 @@
+
+nomad_cluster_name: orbplay
+nomad_region: global
+nomad_datacenter: dc1
+
+# install docker on both nodes (client needs it to run jobs; server install is harmless)
+install_docker: true
+
+# enable basic, insecure playground config (no TLS, no ACLs). For learning only.
+nomad_enable_acls: false
+nomad_enable_tls: false
+
+# Optional: pin versions (otherwise you get latest from HashiCorp apt)
+nomad_package: nomad
+docker_pkg_state: present

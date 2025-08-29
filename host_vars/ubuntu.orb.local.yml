@@ -1,0 +1,2 @@
+nomad_is_server: true
+nomad_is_client: false
