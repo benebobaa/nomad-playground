@@ -12,19 +12,27 @@
     state: directory
     mode: '0755'
 
-- name: Download HashiCorp GPG key
-  ansible.builtin.shell: |
-    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-    chmod 644 /usr/share/keyrings/hashicorp-archive-keyring.gpg
-  args:
-    creates: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+- name: Install HashiCorp GPG key
+  ansible.builtin.apt_key:
+    url: "{{ hashicorp_gpg }}"
+    keyring: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    state: present
+
+- name: Ensure HashiCorp GPG permissions
+  ansible.builtin.file:
+    path: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    mode: '0644'
 
 - name: Add HashiCorp apt repo
-  copy:
-    dest: /etc/apt/sources.list.d/hashicorp.list
+  ansible.builtin.apt_repository:
+    repo: "{{ hashicorp_repo }}"
+    filename: hashicorp
+    state: present
+
+- name: Ensure HashiCorp repo permissions
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/hashicorp.list
     mode: '0644'
-    content: |
-      deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main
 
 - name: Update apt cache
   apt:
